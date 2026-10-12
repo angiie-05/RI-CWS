@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import uo.ri.cws.application.service.invoice.InvoicingService;
-import uo.ri.cws.application.service.invoice.create.commands.CreateInvoice;
+import uo.ri.cws.application.service.invoice.create.commands.InvoiceWorkorder;
 import uo.ri.cws.application.service.invoice.create.commands.FindNotInvoicedWorkOrdersByClient;
 import uo.ri.util.exception.BusinessException;
 import uo.ri.util.exception.NotYetImplementedException;
@@ -15,7 +15,7 @@ public class InvoicingServiceImpl implements InvoicingService {
 
     @Override
     public InvoiceDto create(List<String> workOrderIds) throws BusinessException {
-        return new CreateInvoice(workOrderIds).execute();
+        return new InvoiceWorkorder(workOrderIds).execute();
     }
 
     @Override

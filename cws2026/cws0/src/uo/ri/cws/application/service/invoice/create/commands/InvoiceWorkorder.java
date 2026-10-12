@@ -17,7 +17,7 @@ import uo.ri.util.assertion.BusinessChecks;
 import uo.ri.util.exception.BusinessException;
 import uo.ri.util.jdbc.Jdbc;
 
-public class CreateInvoice {
+public class InvoiceWorkorder {
 
     private static final String SQL_CHECK_WORKORDER = 
         "select id, state, total_amount from TWorkOrders where id = ?";
@@ -30,7 +30,7 @@ public class CreateInvoice {
 
     private List<String> workOrderIds;
 
-    public CreateInvoice(List<String> workOrderIds) {
+    public InvoiceWorkorder(List<String> workOrderIds) {
         ArgumentChecks.isNotNull(workOrderIds, "Workorder ids list cannot be null");
         ArgumentChecks.isFalse(workOrderIds.isEmpty(), "Workorder ids list cannot be empty");
         for (String id : workOrderIds) {
