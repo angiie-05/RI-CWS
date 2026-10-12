@@ -10,8 +10,8 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>cws0</artifactId>
-	<name>cws0</name>
+	<artifactId>cws_services_jdbc</artifactId>
+	<name>cws_services_jdbc</name>
 
 	<properties>
 		<mockito.version>5.19.0</mockito.version>

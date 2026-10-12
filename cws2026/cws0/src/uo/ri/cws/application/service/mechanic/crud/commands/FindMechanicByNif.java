@@ -1,0 +1,47 @@
+package uo.ri.cws.application.service.mechanic.crud.commands;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Optional;
+
+import uo.ri.cws.application.service.mechanic.MechanicCrudService.MechanicDto;
+import uo.ri.util.assertion.ArgumentChecks;
+import uo.ri.util.exception.BusinessException;
+import uo.ri.util.jdbc.Jdbc;
+
+public class FindMechanicByNif {
+
+    private static final String SQL = 
+        "select id, dni, name, surname, version from TMechanics where dni = ?";
+
+    private String nif;
+
+    public FindMechanicByNif(String nif) {
+        ArgumentChecks.isNotBlank(nif, "Nif cannot be empty");
+        this.nif = nif;
+    }
+
+    public Optional<MechanicDto> execute() throws BusinessException {
+        try (Connection c = Jdbc.getCurrentConnection();
+             PreparedStatement pst = c.prepareStatement(SQL)) {
+
+            pst.setString(1, nif);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    MechanicDto m = new MechanicDto();
+                    m.id = rs.getString("id");
+                    m.nif = rs.getString("dni");
+                    m.name = rs.getString("name");
+                    m.surname = rs.getString("surname");
+                    m.version = rs.getLong("version");
+                    return Optional.of(m);
+                }
+                return Optional.empty();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

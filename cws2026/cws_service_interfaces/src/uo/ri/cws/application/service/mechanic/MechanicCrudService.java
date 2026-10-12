@@ -78,5 +78,7 @@ public interface MechanicCrudService {
 		public String name;
 		public String surname;
 	}
+	
+	
 
 }
