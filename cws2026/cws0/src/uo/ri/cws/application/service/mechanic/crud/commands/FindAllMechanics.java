@@ -14,18 +14,18 @@ import uo.ri.util.jdbc.Jdbc;
 public class FindAllMechanics {
 
     private static final String SQL = 
-        "select id, dni, name, surname, version from TMechanics";
+        "select id, nif, name, surname, version from TMechanics";
 
     public List<MechanicDto> execute() throws BusinessException {
         List<MechanicDto> res = new ArrayList<>();
-        try (Connection c = Jdbc.getCurrentConnection();
+        try (Connection c = Jdbc.createThreadConnection();
              PreparedStatement pst = c.prepareStatement(SQL);
              ResultSet rs = pst.executeQuery()) {
 
             while (rs.next()) {
                 MechanicDto m = new MechanicDto();
                 m.id = rs.getString("id");
-                m.nif = rs.getString("dni");
+                m.nif = rs.getString("nif");
                 m.name = rs.getString("name");
                 m.surname = rs.getString("surname");
                 m.version = rs.getLong("version");

@@ -15,9 +15,9 @@ import uo.ri.util.jdbc.Jdbc;
 public class AddMechanic {
 
     private static final String SQL_CHECK_NIF = 
-        "select id from TMechanics where dni = ?";
+        "select id from TMechanics where nif = ?";
     private static final String SQL_INSERT = 
-        "insert into TMechanics(id, dni, name, surname, version) values (?, ?, ?, ?, ?)";
+        "insert into TMechanics(id, nif, name, surname, version, createdAt, updatedAt, entityState) values (?, ?, ?, ?, ?, ?, ?, ?)";
 
     private MechanicDto dto;
 
@@ -30,7 +30,7 @@ public class AddMechanic {
     }
 
     public MechanicDto execute() throws BusinessException {
-        try (Connection c = Jdbc.getCurrentConnection()) {
+        try (Connection c = Jdbc.createThreadConnection()) {
             try (PreparedStatement pst = c.prepareStatement(SQL_CHECK_NIF)) {
                 pst.setString(1, dto.nif);
                 try (ResultSet rs = pst.executeQuery()) {
@@ -40,11 +40,15 @@ public class AddMechanic {
 
             try (PreparedStatement pst = c.prepareStatement(SQL_INSERT)) {
                 String id = UUID.randomUUID().toString();
+                java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
                 pst.setString(1, id);
                 pst.setString(2, dto.nif);
                 pst.setString(3, dto.name);
                 pst.setString(4, dto.surname);
                 pst.setLong(5, 1L);
+                pst.setTimestamp(6, now);
+                pst.setTimestamp(7, now);
+                pst.setString(8, "ENABLED");
                 pst.executeUpdate();
 
                 dto.id = id;

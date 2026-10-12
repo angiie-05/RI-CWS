@@ -29,7 +29,7 @@ public class DeleteMechanic {
     }
 
     public Void execute() throws BusinessException {
-        try (Connection c = Jdbc.getCurrentConnection()) {
+        try (Connection c = Jdbc.createThreadConnection()) {
             try (PreparedStatement pst = c.prepareStatement(SQL_CHECK_EXISTS)) {
                 pst.setString(1, id);
                 try (ResultSet rs = pst.executeQuery()) {

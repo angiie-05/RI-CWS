@@ -20,11 +20,11 @@ import uo.ri.util.jdbc.Jdbc;
 public class CreateInvoice {
 
     private static final String SQL_CHECK_WORKORDER = 
-        "select id, state, amount from TWorkOrders where id = ?";
+        "select id, state, total_amount from TWorkOrders where id = ?";
     private static final String SQL_GET_NEXT_INVOICE_NUMBER = 
         "select max(number) + 1 from TInvoices";
     private static final String SQL_INSERT_INVOICE = 
-        "insert into TInvoices(id, number, date, vat, amount, state, version) values(?, ?, ?, ?, ?, ?, ?)";
+        "insert into TInvoices(id, number, date, vatrate, vatamount, subtotal, total, state, version) values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_LINK_WORKORDER = 
         "update TWorkOrders set invoice_id = ?, state = 'INVOICED' where id = ?";
 
@@ -40,7 +40,7 @@ public class CreateInvoice {
     }
 
     public InvoiceDto execute() throws BusinessException {
-        try (Connection c = Jdbc.getCurrentConnection()) {
+        try (Connection c = Jdbc.createThreadConnection()) {
             BigDecimal subtotal = BigDecimal.ZERO;
 
             for (String id : workOrderIds) {
@@ -48,8 +48,8 @@ public class CreateInvoice {
                     pst.setString(1, id);
                     try (ResultSet rs = pst.executeQuery()) {
                         BusinessChecks.isTrue(rs.next(), "Workorder does not exist");
-                        BusinessChecks.isTrue("FINISHED".equalsIgnoreCase(rs.getString("state")), "Workorder is not finished");
-                        subtotal = subtotal.add(rs.getBigDecimal("amount"));
+                        BusinessChecks.isTrue("APPROVED".equalsIgnoreCase(rs.getString("state")), "Workorder is not approved");
+                        subtotal = subtotal.add(rs.getBigDecimal("total_amount"));
                     }
                 }
             }
@@ -63,9 +63,10 @@ public class CreateInvoice {
             }
 
             LocalDate dateInvoice = LocalDate.now();
-            BigDecimal vatPercentage = dateInvoice.isAfter(LocalDate.of(2012, 7, 1)) ? new BigDecimal("21.0") : new BigDecimal("18.0");
-            BigDecimal vatAmount = subtotal.multiply(vatPercentage.divide(new BigDecimal("100"))).setScale(2, RoundingMode.HALF_UP);
-            BigDecimal total = subtotal.add(vatAmount).setScale(2, RoundingMode.HALF_UP);
+                BigDecimal vatPercentage = new BigDecimal("21");
+                BigDecimal vatAmount = subtotal.multiply(vatPercentage)
+                    .divide(new BigDecimal("100"), 2, RoundingMode.HALF_EVEN);
+                BigDecimal total = subtotal.add(vatAmount);
 
             String idInvoice = UUID.randomUUID().toString();
             try (PreparedStatement pst = c.prepareStatement(SQL_INSERT_INVOICE)) {
@@ -73,9 +74,11 @@ public class CreateInvoice {
                 pst.setLong(2, numberInvoice);
                 pst.setDate(3, Date.valueOf(dateInvoice));
                 pst.setBigDecimal(4, vatPercentage);
-                pst.setBigDecimal(5, total);
-                pst.setString(6, "NOT_YET_PAID");
-                pst.setLong(7, 1L);
+                pst.setBigDecimal(5, vatAmount);
+                pst.setBigDecimal(6, subtotal);
+                pst.setBigDecimal(7, total);
+                pst.setString(8, "ISSUED");
+                pst.setLong(9, 1L);
                 pst.executeUpdate();
             }
 
@@ -92,8 +95,10 @@ public class CreateInvoice {
             invoice.number = numberInvoice;
             invoice.date = dateInvoice;
             invoice.total = total;
+            invoice.subtotal = subtotal;
+            invoice.vatAmount = vatAmount;
             invoice.vatPercentage = vatPercentage;
-            invoice.state = "NOT_YET_PAID";
+            invoice.state = "ISSUED";
             invoice.version = 1L;
             return invoice;
             } catch (SQLException e) {

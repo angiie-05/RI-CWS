@@ -14,7 +14,7 @@ import uo.ri.util.jdbc.Jdbc;
 public class FindMechanicById {
 
     private static final String SQL = 
-        "select id, dni, name, surname, version from TMechanics where id = ?";
+        "select id, nif, name, surname, version from TMechanics where id = ?";
 
     private String id;
 
@@ -24,7 +24,7 @@ public class FindMechanicById {
     }
 
     public Optional<MechanicDto> execute() throws BusinessException {
-        try (Connection c = Jdbc.getCurrentConnection();
+        try (Connection c = Jdbc.createThreadConnection();
              PreparedStatement pst = c.prepareStatement(SQL)) {
 
             pst.setString(1, id);
@@ -32,7 +32,7 @@ public class FindMechanicById {
                 if (rs.next()) {
                     MechanicDto m = new MechanicDto();
                     m.id = rs.getString("id");
-                    m.nif = rs.getString("dni");
+                    m.nif = rs.getString("nif");
                     m.name = rs.getString("name");
                     m.surname = rs.getString("surname");
                     m.version = rs.getLong("version");
