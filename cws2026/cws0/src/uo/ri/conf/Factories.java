@@ -1,0 +1,12 @@
+package uo.ri.conf;
+
+import uo.ri.cws.application.service.ServiceFactory;
+import uo.ri.cws.application.service.ServiceFactoryImpl;
+
+public class Factories {
+    public static ServiceFactory service = new ServiceFactoryImpl();
+    
+    public static void close() {
+        
+    };
+}
