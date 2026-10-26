@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import uo.ri.cws.application.persistence.util.executor.Jdbc;
 import uo.ri.cws.application.persistence.voucher.VoucherGateway;
+import uo.ri.util.exception.NotYetImplementedException;
 import uo.ri.util.exception.PersistenceException;
 import uo.ri.util.jdbc.Queries;
 
@@ -45,45 +46,17 @@ public class VoucherGatewayImpl implements VoucherGateway {
 
     @Override
     public void update(VoucherRecord v) throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TVOUCHERS_UPDATE"))) {
-            pst.setString(1, v.description);
-            pst.setBigDecimal(2, v.available);
-            pst.setString(3, v.code);
-            pst.setString(4, v.id);
-            pst.executeUpdate();
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override
     public Optional<VoucherRecord> findById(String id) throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TVOUCHERS_FINDBYID"))) {
-            pst.setString(1, id);
-            try (ResultSet rs = pst.executeQuery()) {
-                return rs.next()
-                        ? Optional.of(assembler.toRecord(rs))
-                        : Optional.empty();
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override
     public List<VoucherRecord> findAll() throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TVOUCHERS_FINDALL"));
-                ResultSet rs = pst.executeQuery()) {
-            return assembler.toRecordList(rs);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override

@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import uo.ri.cws.application.persistence.paymentmean.PaymentMeanGateway;
 import uo.ri.cws.application.persistence.util.executor.Jdbc;
+import uo.ri.util.exception.NotYetImplementedException;
 import uo.ri.util.exception.PersistenceException;
 import uo.ri.util.jdbc.Queries;
 
@@ -50,48 +51,17 @@ public class PaymentMeanGatewayImpl implements PaymentMeanGateway {
 
     @Override
     public void update(PaymentMeanRecord p) throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TPAYMENTMEANS_UPDATE"))) {
-            pst.setString(1, p.entityState);
-            pst.setTimestamp(2, Timestamp.valueOf(p.updatedAt));
-            pst.setLong(3, p.version);
-            pst.setString(4, p.dtype);
-            pst.setBigDecimal(5, p.accumulated);
-            pst.setString(6, p.client_id);
-            pst.setString(7, p.id);
-            pst.executeUpdate();
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override
     public Optional<PaymentMeanRecord> findById(String id) throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TPAYMENTMEANS_FINDBYID"))) {
-            pst.setString(1, id);
-            try (ResultSet rs = pst.executeQuery()) {
-                return rs.next()
-                        ? Optional.of(assembler.toRecord(rs))
-                        : Optional.empty();
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override
     public List<PaymentMeanRecord> findAll() throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TPAYMENTMEANS_FINDALL"));
-                ResultSet rs = pst.executeQuery()) {
-            return assembler.toRecordList(rs);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override

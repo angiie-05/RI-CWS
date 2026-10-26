@@ -2,7 +2,6 @@ package uo.ri.cws.application.persistence.cash.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +13,6 @@ import uo.ri.util.exception.PersistenceException;
 import uo.ri.util.jdbc.Queries;
 
 public class CashGatewayImpl implements CashGateway {
-
-    private final CashAssembler assembler = new CashAssembler();
 
     @Override
     public void add(CashRecord cash) throws PersistenceException {
@@ -51,29 +48,11 @@ public class CashGatewayImpl implements CashGateway {
 
     @Override
     public Optional<CashRecord> findById(String id) throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TCASHES_FINDBYID"))) {
-            pst.setString(1, id);
-            try (ResultSet rs = pst.executeQuery()) {
-                return rs.next()
-                        ? Optional.of(assembler.toRecord(rs))
-                        : Optional.empty();
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override
     public List<CashRecord> findAll() throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TCASHES_FINDALL"));
-                ResultSet rs = pst.executeQuery()) {
-            return assembler.toRecordList(rs);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 }

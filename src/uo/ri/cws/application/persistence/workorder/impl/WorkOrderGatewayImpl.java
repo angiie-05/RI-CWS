@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import uo.ri.cws.application.persistence.util.executor.Jdbc;
 import uo.ri.cws.application.persistence.workorder.WorkOrderGateway;
+import uo.ri.util.exception.NotYetImplementedException;
 import uo.ri.util.exception.PersistenceException;
 import uo.ri.util.jdbc.Queries;
 
@@ -19,38 +20,12 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 
     @Override
     public void add(WorkOrderRecord w) throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TWORKORDERS_ADD"))) {
-            pst.setString(1, w.id);
-            pst.setString(2, w.entityState);
-            pst.setTimestamp(3, Timestamp.valueOf(w.createdAt));
-            pst.setTimestamp(4, Timestamp.valueOf(w.updatedAt));
-            pst.setLong(5, w.version);
-            pst.setTimestamp(6, Timestamp.valueOf(w.date));
-            pst.setString(7, w.description);
-            pst.setString(8, w.state);
-            pst.setBoolean(9, w.usedforvoucher);
-            pst.setBigDecimal(10, w.total_amount);
-            pst.setString(11, w.invoice_id);
-            pst.setString(12, w.mechanic_id);
-            pst.setString(13, w.vehicle_id);
-            pst.executeUpdate();
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override
     public void remove(String id) throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TWORKORDERS_REMOVE"))) {
-            pst.setString(1, id);
-            pst.executeUpdate();
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override
@@ -94,14 +69,7 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 
     @Override
     public List<WorkOrderRecord> findAll() throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TWORKORDERS_FINDALL"));
-                ResultSet rs = pst.executeQuery()) {
-            return assembler.toRecordList(rs);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override

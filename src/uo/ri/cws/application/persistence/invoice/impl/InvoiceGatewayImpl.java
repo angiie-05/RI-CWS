@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import uo.ri.cws.application.persistence.invoice.InvoiceGateway;
 import uo.ri.cws.application.persistence.util.executor.Jdbc;
+import uo.ri.util.exception.NotYetImplementedException;
 import uo.ri.util.exception.PersistenceException;
 import uo.ri.util.jdbc.Queries;
 
@@ -44,65 +45,22 @@ public class InvoiceGatewayImpl implements InvoiceGateway {
 
     @Override
     public void remove(String id) throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TINVOICES_REMOVE"))) {
-            pst.setString(1, id);
-            pst.executeUpdate();
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override
     public void update(InvoiceRecord i) throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TINVOICES_UPDATE"))) {
-            pst.setString(1, i.entityState);
-            pst.setTimestamp(2, Timestamp.valueOf(i.updatedAt));
-            pst.setLong(3, i.version);
-            pst.setDate(4, Date.valueOf(i.date));
-            pst.setLong(5, i.number);
-            pst.setString(6, i.state);
-            pst.setBoolean(7, i.usedforvoucher);
-            pst.setBigDecimal(8, i.subtotal);
-            pst.setBigDecimal(9, i.total);
-            pst.setBigDecimal(10, i.vatamount);
-            pst.setBigDecimal(11, i.vatrate);
-            pst.setString(12, i.id);
-            pst.executeUpdate();
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override
     public Optional<InvoiceRecord> findById(String id) throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TINVOICES_FINDBYID"))) {
-            pst.setString(1, id);
-            try (ResultSet rs = pst.executeQuery()) {
-                return rs.next()
-                        ? Optional.of(assembler.toRecord(rs))
-                        : Optional.empty();
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override
     public List<InvoiceRecord> findAll() throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TINVOICES_FINDALL"));
-                ResultSet rs = pst.executeQuery()) {
-            return assembler.toRecordList(rs);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override

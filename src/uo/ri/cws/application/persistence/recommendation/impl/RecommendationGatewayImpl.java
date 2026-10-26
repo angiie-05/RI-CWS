@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import uo.ri.cws.application.persistence.recommendation.RecommendationGateway;
 import uo.ri.cws.application.persistence.util.executor.Jdbc;
+import uo.ri.util.exception.NotYetImplementedException;
 import uo.ri.util.exception.PersistenceException;
 import uo.ri.util.jdbc.Queries;
 
@@ -50,48 +51,17 @@ public class RecommendationGatewayImpl implements RecommendationGateway {
 
     @Override
     public void update(RecommendationRecord r) throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TRECOMMENDATIONS_UPDATE"))) {
-            pst.setString(1, r.entityState);
-            pst.setTimestamp(2, Timestamp.valueOf(r.updatedAt));
-            pst.setLong(3, r.version);
-            pst.setBoolean(4, r.usedforvoucher);
-            pst.setString(5, r.recommender_id);
-            pst.setString(6, r.recommended_id);
-            pst.setString(7, r.id);
-            pst.executeUpdate();
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override
     public Optional<RecommendationRecord> findById(String id) throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TRECOMMENDATIONS_FINDBYID"))) {
-            pst.setString(1, id);
-            try (ResultSet rs = pst.executeQuery()) {
-                return rs.next()
-                        ? Optional.of(assembler.toRecord(rs))
-                        : Optional.empty();
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override
     public List<RecommendationRecord> findAll() throws PersistenceException {
-        Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(
-                Queries.getSQLSentence("TRECOMMENDATIONS_FINDALL"));
-                ResultSet rs = pst.executeQuery()) {
-            return assembler.toRecordList(rs);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        throw new NotYetImplementedException();
     }
 
     @Override
